@@ -12,7 +12,7 @@
   
 + **Dimensionality and Complexity Control:** Provides options to adjust data dimensionality, complexity of relationships between variables, and the presence of noise or outliers, enabling comprehensive testing of algorithms.
   
-+ **Automatic Labeling: Offers capabilities for automatically labeling generated datasets according to predefined rules  streamlining the data preparation process for model training and validation.
++ **Automatic Labeling**: Offers capabilities for automatically labeling generated datasets according to predefined rules  streamlining the data preparation process for model training and validation.
   
 + **Integration with ML Frameworks:** Compatible with major machine learning frameworks such as TensorFlow, PyTorch, scikit-learn, among others, facilitating seamless integration of generated datasets into development and experimentation pipelines.
   

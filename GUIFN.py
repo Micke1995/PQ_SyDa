@@ -690,7 +690,7 @@ class Window3():
 		
 def main():
 	set_appearance_mode("System") 
-	set_default_color_theme("metal.json")
+	set_default_color_theme("Themes\metal.json")
 	root = CTk()
 	app	= Window1(root)
 	root.mainloop()

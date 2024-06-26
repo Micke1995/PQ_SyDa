@@ -1,13 +1,16 @@
 from customtkinter import * 
 from tkinter import *
-from tkinter 							import filedialog, messagebox
+from tkinter 							import filedialog, messagebox,simpledialog
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg 	import FigureCanvasTkAgg, NavigationToolbar2Tk
 from PQmodel import PQ
 import numpy as np
 from scipy.io import savemat
 from pandas import DataFrame
-from sklearn.preprocessing import normalize
+from sklearn.model_selection import train_test_split 
+from os import rename
+
+#Training select
 
 
 catalog=['Pure sinusoidal', 'Sag', 'Swell','Interruption','Transient/Impulse/Spike',
@@ -240,7 +243,7 @@ class Window1():
 		self.SAGLb = CTkLabel(self.tbsettings.tab( 'Sag/Swell'), text = 'Parameters:', font = (font_text, 14))
 		self.SAGLb.place(relx = 0.12, y = 2, relwidth = 0.8, anchor = NE)
 		
-		self.AlphaLb = CTkLabel(self.tbsettings.tab( 'Sag/Swell'), text = 'Alpha[Min][Max]:', font = (font_text, 14))
+		self.AlphaLb = CTkLabel(self.tbsettings.tab( 'Sag/Swell'), text = 'σ [Min][Max]:', font = (font_text, 14))
 		self.AlphaLb.place(relx = 0.22, y = 20, relwidth = 0.15, anchor = NE)
     
 		self.val_Alphamin = DoubleVar()
@@ -251,7 +254,7 @@ class Window1():
 		self.ent_Alphamax = CTkEntry(self.tbsettings.tab( 'Sag/Swell'), textvariable = self.val_Alphamax, font = (font_text, 14))
 		self.ent_Alphamax.place(relx = 0.35, y = 20, relwidth = 0.09)			
 
-		self.BetaLb = CTkLabel(self.tbsettings.tab( 'Sag/Swell'), text = 'Beta[Min][Max]:', font = (font_text, 14))
+		self.BetaLb = CTkLabel(self.tbsettings.tab( 'Sag/Swell'), text = 'β [Min][Max]:', font = (font_text, 14))
 		self.BetaLb.place(relx = 0.22, y = 50, relwidth = 0.15, anchor = NE)
     
 		self.val_Betamin = DoubleVar()
@@ -262,7 +265,7 @@ class Window1():
 		self.ent_Betamax = CTkEntry(self.tbsettings.tab( 'Sag/Swell'), textvariable = self.val_Betamax, font = (font_text, 14))
 		self.ent_Betamax.place(relx = 0.35, y = 50, relwidth = 0.09)		
 
-		self.RhoLb = CTkLabel(self.tbsettings.tab( 'Sag/Swell'), text = 'Rho[Min][Max]:', font = (font_text, 14))
+		self.RhoLb = CTkLabel(self.tbsettings.tab( 'Sag/Swell'), text = 'ρ [Min][Max]:', font = (font_text, 14))
 		self.RhoLb.place(relx = 0.6, y = 20, relwidth = 0.15, anchor = NE)
     
 		self.val_Rhomin = DoubleVar()
@@ -278,7 +281,7 @@ class Window1():
 		self.OscLb = CTkLabel(self.tbsettings.tab( 'Oscillatory'), text = 'Parameters:', font = (font_text, 14))
 		self.OscLb.place(relx = 0.12, y = 2, relwidth = 0.8, anchor = NE)
 		
-		self.TauLb = CTkLabel(self.tbsettings.tab( 'Oscillatory'), text = 'Tau [Min][Max]:', font = (font_text, 14))
+		self.TauLb = CTkLabel(self.tbsettings.tab( 'Oscillatory'), text = 'τ [Min][Max]:', font = (font_text, 14))
 		self.TauLb.place(relx = 0.22, y = 20, relwidth = 0.15, anchor = NE)
     
 		self.val_Taumin = DoubleVar()
@@ -327,7 +330,7 @@ class Window1():
 		self.ent_Ffmax = CTkEntry(self.tbsettings.tab( 'Flicker'), textvariable = self.val_Ffmax, font = (font_text, 14))
 		self.ent_Ffmax.place(relx = 0.41, y = 20, relwidth = 0.09)	
 
-		self.LamndaLb = CTkLabel(self.tbsettings.tab( 'Flicker'), text = 'Lambda [Min][Max] :', font = (font_text, 14))
+		self.LamndaLb = CTkLabel(self.tbsettings.tab( 'Flicker'), text = 'λ [Min][Max] :', font = (font_text, 14))
 		self.LamndaLb.place(relx = 0.3, y = 50, anchor = NE)
     
 		self.val_Lamndamin =  DoubleVar()
@@ -344,7 +347,7 @@ class Window1():
 		self.TrsnLb = CTkLabel(self.tbsettings.tab( 'Transient'), text = 'Parameters:', font = (font_text, 14))
 		self.TrsnLb.place(relx = 0.12, y = 2, relwidth = 0.8, anchor = NE)
 		
-		self.PsiLb = CTkLabel(self.tbsettings.tab( 'Transient'), text = 'Psi [Min][Max] :', font = (font_text, 14))
+		self.PsiLb = CTkLabel(self.tbsettings.tab( 'Transient'), text = 'ψ [Min][Max] :', font = (font_text, 14))
 		self.PsiLb.place(relx = 0.27, y = 20, relwidth = 0.25, anchor = NE)
     
 		self.val_Psimin =  DoubleVar()
@@ -652,6 +655,10 @@ class Window3():
 			labels = DataFrame( self.Signals*self.numberSignals)
 			Dataset.insert(0,'Label',labels,True)
 
+			#simpledialog.askfloat('Divide the dataset','If you want to divide the dataset input a the percentage of test validation you want (0.0 to 1.0)')
+
+			train, test = train_test_split(Allsig, test_size = 0.30)
+
 			if withpath:
 				files = [('Numpy Array', '*.npy'), 
 						('Text Document', '*.txt'),
@@ -659,10 +666,9 @@ class Window3():
 						('Matlab file','*.mat'),
 						('Compress Numpy Array','*.npz'),
 						('All Files', '*.*')] 
-				file = filedialog.asksaveasfile(filetypes = files, defaultextension = files) 
+				file = filedialog.asksaveasfile(filetypes = files, defaultextension = files,initialfile='Test_') 
 				if file.name.endswith('.txt'):
 					np.savetxt(file.name,Dataset)
-
 				if file.name.endswith('.csv'):
 					Dataset.to_csv(file.name)						
 				if file.name.endswith('.npy'):
@@ -675,7 +681,7 @@ class Window3():
 				file = filedialog.asksaveasfile(mode='w', defaultextension=".npy") 
 				if file:
 					np.save(file.name,Dataset)
-			#self.master.lift()
+		
 		else:
 			messagebox.showerror('Error','The model is not inizialized yet')
 			self.master.destroy()

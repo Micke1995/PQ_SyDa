@@ -46,9 +46,10 @@ In this repository there are 2 models that you can load and use.
 # Note:
 + All the machine lerning models recive the signal from the funcion FeatExtraction() that is contained in Tools.py this function made a feature extraction and return a vector with 6 features :
   - RMS or mean value 
-  - Imin the local minimal of the signal
-  - Imax the local maximal of the signal
+  - Imin local minimal of the signal
+  - Imax local maximal of the signal
   - Nlm Number of local maximal
   - Zc Number of zero crossing
   - Energy
 + All the deep learning models recive the raw signal, without feature extraction.
++ The PQ model should be inizialed with the same values of Fundamental Frequency, Sampling rate and Event length that the Machine Learning Model was trained.

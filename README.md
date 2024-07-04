@@ -33,9 +33,22 @@ Also you can load a Machine Learnig model or a Deep learning model and predict t
 
 >![Predict](https://github.com/Micke1995/ROPEC-2024/blob/main/Figures/PredictML.gif)
 
-# Note:
-+ All the machine models pass by the funcion  
 In this repository there are 2 models that you can load and use.
 
-+ The firs model is a Desicion tree
-That's all.
++ The first model is a decision tree the model was trained and tested with the following signals and got this results:
+
+  >![BarDT](https://github.com/Micke1995/ROPEC-2024/blob/main/Figures/barplot_DecisionTree.png) 
+
++ The second model is a Support Vector Machine the model was trained and tested with the following signals and got this results:
+
+  >![BarSVM](https://github.com/Micke1995/ROPEC-2024/blob/main/Figures/barplot_SVM.png) 
+
+# Note:
++ All the machine lerning models recive the signal from the funcion FeatExtraction() that is contained in Tools.py this function made a feature extraction and return a vector with 6 features :
+  - RMS or mean value 
+  - Imin the local minimal of the signal
+  - Imax the local maximal of the signal
+  - Nlm Number of local maximal
+  - Zc Number of zero crossing
+  - Energy
++ All the deep learning models recive the raw signal, without feature extraction.

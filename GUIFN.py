@@ -1,6 +1,6 @@
 from customtkinter import * 
 from tkinter import *
-from tkinter 							import filedialog, messagebox,simpledialog
+from tkinter 							import filedialog, messagebox
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg 	import FigureCanvasTkAgg, NavigationToolbar2Tk
 from PQmodel import PQ
@@ -8,7 +8,12 @@ import numpy as np
 from scipy.io import savemat
 from pandas import DataFrame
 from sklearn.model_selection import train_test_split 
-from os import rename
+import joblib
+from keras.models import load_model
+from CTkMessagebox import CTkMessagebox
+from Tools import *
+from time import sleep
+# from os import rename
 
 #Training select
 
@@ -25,6 +30,8 @@ catalog=['Pure sinusoidal', 'Sag', 'Swell','Interruption','Transient/Impulse/Spi
          'Swell with Harmonics with Flicker with Oscillatory transient']
 
 figs_size_font = 20
+index=-1
+tetx = ''
 
 class Window1():
 
@@ -45,6 +52,9 @@ class Window1():
 		self.Model = None
 		self.Create_Widgets()
 		self.Signals = []
+		self.MLmodel = None
+		self.MLpath = '' 
+		self.messagPrediction = '!'
 
 	
 	def Create_Widgets(self):
@@ -82,7 +92,7 @@ class Window1():
 		self.FS_val = DoubleVar()
 		self.FSLabel = CTkLabel(self.SttgFrame, height = 20, text = 'Sampling rate (Hz):', font = (font_text, 14))
 		self.FSLabel.place(relx = 0.27, y = 15.0)		
-		self.FS_val.set(18000)
+		self.FS_val.set(3600)
 		self.FSEnt = CTkEntry(self.SttgFrame, font = (font_text, 14),textvariable=self.FS_val)
 		self.FSEnt.place(relx = 0.37, y = 10.0, relwidth = 0.045)
 		
@@ -387,8 +397,6 @@ class Window1():
 
 
 		# # =============================== SIMULATION ======================================= #
-		# self.Simulation = CTkFrame(self.master)#, text = 'Simulation', font = (font_text, 14)
-		# self.Simulation.place(x = 14, y = 300, relheight = 0.62, relwidth = 0.980, anchor = NW)
 
 		# NOTEBOOK FOR GRAPHICS
 		self.Notebook = CTkTabview(self.master)
@@ -397,6 +405,63 @@ class Window1():
 		#self.Viz = CTkFrame(self.Notebook)
 		self.Notebook.add( 'Signal vizualitation')
 		self.Notebook.add( 'FFT')
+		self.Notebook.add( 'Machine Learning')
+
+		# self.LoadMLModel = CTkButton(self.Notebook.tab('Machine Learning'), text = 'Load ML Model', font = (font_text, 14), anchor = CENTER)
+		# self.LoadMLModel.place(relx = 0.775, y = 119, anchor = NW)	
+		self.FileMLModel = CTkButton(self.Notebook.tab('Machine Learning'), text = 'File', font = (font_text, 14), anchor = CENTER,command=self.LoadPredictML)
+		self.FileMLModel.place(relx = 0.075, y = 10, anchor = NW)		
+
+		self.val_entModel =  StringVar()
+		self.entModel = CTkEntry(self.Notebook.tab('Machine Learning'), font = (font_text, 14),textvariable = self.val_entModel)
+		self.entModel.place(relx = 0.2, y = 10, relwidth = 0.45)
+		self.val_entModel.set('Select machine learning file...')
+
+		self.PredictModel = CTkButton(self.Notebook.tab('Machine Learning'), text = 'Predict', font = (font_text, 14), anchor = CENTER,command=self.clickpredictML)
+		self.PredictModel.place(relx = 0.77, y = 10, anchor = NW)
+
+		self.PredLbl = CTkLabel(self.Notebook.tab('Machine Learning'),text =' ', font = (font_text, 22))
+		self.PredLbl.place(relx = 0.05, y = 80, anchor = NW)
+
+	def clickpredictML(self):
+		self.PredLbl.configure(text='')
+		if self.Model!=None and self.MLmodel !=None:
+			Signal_index = catalog.index(self.val_PQ.get())
+			
+			if self.MLpath.endswith('.pkl'):
+				Pred = int(self.MLmodel.predict(FeatExtraction(self.Signals[0,Signal_index]).reshape(1,6)))
+				self.messagPrediction ='The type of event the signal contains is ' + catalog[Pred] +' you can vizualise the signal in the window tab \"Signal vizualization\"' #'The type of event the signal contains is ' # catalog[Pred] #
+				self.slide()			
+		else:
+			CTkMessagebox(title="Error", 
+                  message="The PQ model or the Machine Learning model are not inizialized yet",
+				  icon='cancel')
+			
+	def slide(self):
+		global index,tetx
+		if index>=len(self.messagPrediction)-1:
+			index=-1
+			tetx = ' '
+		else:
+			tetx += self.messagPrediction[index+1]
+			self.PredLbl.configure(text=tetx)
+			index+=1
+			self.PredLbl.after(60,self.slide)
+	
+	def LoadPredictML(self):
+
+		self.MLpath = filedialog.askopenfilename(title		='Select a Machine Learning Model',
+		                          	   		   filetype		=[('Machine Learning files', '*.pkl'),('Tensor Flow files', '*.h5')])
+				
+		self.val_entModel.set(self.MLpath)
+		if self.MLpath.endswith('.pkl'):
+			self.MLmodel = joblib.load(self.MLpath)			
+		elif self.MLpath.endswith('.h5'):
+			self.MLmodel = load_model(self.MLpath)
+		else:
+			CTkMessagebox(title="Error", 
+                  message="The format is not supported",
+				  icon='cancel')
 			
 	def Fig_Signals(self):
 

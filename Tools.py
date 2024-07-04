@@ -12,7 +12,7 @@ def FeatExtraction(signal):
     Imin = max(signal[argrelextrema(signal,np.less)])
     Nlm = len(maximos)#sum(maximos)#
     Zc = len(np.where(np.diff(np.sign(signal)))[0])
-    Features = [Energy,rms,Imax,Imin,Nlm,Zc]
+    Features = np.array([Energy,rms,Imax,Imin,Nlm,Zc])
     return Features
 
 def build_data(data,t,fmin=0,fmax=30):
@@ -27,11 +27,13 @@ def build_data(data,t,fmin=0,fmax=30):
             dbl.append(y)
     return np.array(db),np.array(dbl)
 
-def build_featdata(data):
+def build_featdata(data,labels):
     Muestras,tSenal,_=data.shape
     db,dbl=[],[]
     for j in range(Muestras):
+        u=0
         for k in range (tSenal):
             db.append(FeatExtraction(data[j,k]))
-            dbl.append(k)
+            dbl.append(labels[u])
+            u = u+1
     return np.array(db),np.array(dbl)

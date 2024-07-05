@@ -53,6 +53,7 @@ In this repository there are 2 models that you can load and use.
   - Energy
 + All the deep learning models recive the raw signal, without feature extraction.
 + The PQ model should be inizialed with the same values of Fundamental Frequency, Sampling rate and Event length that the Machine Learning Model was trained.
++ Using a different version of scikit-learn 1.5.0 could lead to unknwon errors.
 
 
 # Getting started with Anaconda3:

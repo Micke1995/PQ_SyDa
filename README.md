@@ -44,7 +44,7 @@ In this repository there are 2 models that you can load and use.
   >![BarSVM](https://github.com/Micke1995/ROPEC-2024/blob/main/Figures/barplot_SVM.png) 
 
 # Note:
-+ All the machine lerning models recive the signal from the funcion FeatExtraction() that is contained in Tools.py this function made a feature extraction and return a vector with 6 features :
++ All the machine lerning models recive the signal from the funcion `FeatExtraction( )` that is contained in `Tools.py` this function made a feature extraction and return a vector with 6 features :
   - RMS or mean value 
   - Imin local minimal of the signal
   - Imax local maximal of the signal

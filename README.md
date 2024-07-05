@@ -55,12 +55,12 @@ In this repository there are 2 models that you can load and use.
 + The PQ model should be inizialed with the same values of Fundamental Frequency, Sampling rate and Event length that the Machine Learning Model was trained.
 
 
-#Getting started with Anaconda3:
+# Getting started with Anaconda3:
 
-1.Install Anaconda3 on your machine
-2.Clone this repository
-3.Navigate to this repository in your terminal
-4.Create an environment using the following command (for Mac/Linux use the generic terminal, for Windows, you can use the Anaconda prompt terminal)
-  +Run conda env create -f environment.yml in your terminal
-5.Activate the environment by running conda activate tf
-6.Run the app by triggering the python file python GUIFN.py
+1. Install Anaconda3 on your machine
+2. Clone this repository
+3. Navigate to this repository in your terminal
+4. Create an environment using the following command (for Mac/Linux use the generic terminal, for Windows, you can use the Anaconda prompt terminal)
+  + Run `conda env create  -f environment.yml` in your terminal
+5. Activate the environment by running `conda activate tf`
+6. Run the app by triggering the python file `python GUIFN.py`

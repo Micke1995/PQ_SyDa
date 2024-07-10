@@ -1,5 +1,4 @@
 from customtkinter import * 
-from tkinter import *
 from tkinter 							import filedialog, messagebox
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg 	import FigureCanvasTkAgg, NavigationToolbar2Tk
@@ -12,13 +11,10 @@ import joblib
 from keras.models import load_model
 from CTkMessagebox import CTkMessagebox
 from Tools import *
-from time import sleep
-# from os import rename
-
-#Training select
+from os.path import splitext
 
 
-catalog=['Pure sinusoidal', 'Sag', 'Swell','Interruption','Transient/Impulse/Spike',
+catalog=['Pure sinusoidal', 'Sag', 'Swell','Interruption','Transient',
          'Oscillatory transient','Harmonics','Harmonics with Sag', 'Harmonics with Swell',
          'Flicker', 'Flicker with Sag', 'Flicker with Swell', 'Sag with Oscillatory transient',
          'Swell with Oscillatory transient', 'Sag with Harmonics', 'Swell with Harmonics', 'Notch',
@@ -39,7 +35,6 @@ class Window1():
 
 	global font_text
 	font_text = 'TimesNewRoman'
-
 
 
 	def __init__(self, master):
@@ -121,14 +116,9 @@ class Window1():
 		self.AcivateDeactivate(RandomStar,self.val_RandomStart)                     
 		        
         # ======================================== GENERAL BUTTON'S ======================================== #
-		# self.CLEAR = tk.Button(self.master, text = 'CLEAR ALL', font = (font_text, 12), anchor = tk.CENTER)
-		# self.CLEAR.place(relx = 0.62, y = 50, height = 30, relwidth = 0.11)
 
 		self.RUN = CTkButton(self.SttgFrame, text = 'RUN', font = (font_text, 14), height = 30,command=self.clickRUN)
 		self.RUN.place(relx = 0.775, y = 75, relwidth = 0.085)
-
-		# self.RUN = CTkButton(self.master, text = 'EXIT', font = (font_text, 12), height = 30,command= self.click_EXIT)
-		# self.RUN.place(relx = 0.90, y = 40, relwidth = 0.085)
 
 		self.Init = CTkButton(self.SttgFrame, text = 'INITIALIZE MODEL', font = (font_text, 14),command=self.clickInizializeModel)#Initialize
 		self.Init.place(relx = 0.615, y = 75)
@@ -400,15 +390,11 @@ class Window1():
 
 		# NOTEBOOK FOR GRAPHICS
 		self.Notebook = CTkTabview(self.master)
-		#self.Notebook.place(relx = 0.005, rely = 0.004, relwidth = 0.99, relheight = 0.99, anchor = NW)
 		self.Notebook.place(x = 14, y = 290, relheight = 0.63, relwidth = 0.980, anchor = NW)
-		#self.Viz = CTkFrame(self.Notebook)
 		self.Notebook.add( 'Signal vizualitation')
 		self.Notebook.add( 'FFT')
 		self.Notebook.add( 'Machine Learning')
 
-		# self.LoadMLModel = CTkButton(self.Notebook.tab('Machine Learning'), text = 'Load ML Model', font = (font_text, 14), anchor = CENTER)
-		# self.LoadMLModel.place(relx = 0.775, y = 119, anchor = NW)	
 		self.FileMLModel = CTkButton(self.Notebook.tab('Machine Learning'), text = 'File', font = (font_text, 14), anchor = CENTER,command=self.LoadPredictML)
 		self.FileMLModel.place(relx = 0.075, y = 10, anchor = NW)		
 
@@ -427,11 +413,16 @@ class Window1():
 		self.PredLbl.configure(text='')
 		if self.Model!=None and self.MLmodel !=None:
 			Signal_index = catalog.index(self.val_PQ.get())
-			
 			if self.MLpath.endswith('.pkl'):
 				Pred = int(self.MLmodel.predict(FeatExtraction(self.Signals[0,Signal_index]).reshape(1,6)))
 				self.messagPrediction ='The type of event the signal contains is ' + catalog[Pred] +' you can vizualise the signal in the window tab \"Signal vizualization\"' #'The type of event the signal contains is ' # catalog[Pred] #
-				self.slide()			
+				self.slide()
+
+			if self.MLpath.endswith('.h5'):
+				Signal_List = [1,2,3,4,5,6,9,16] 
+				Pred = Signal_List[int(np.argmax(self.MLmodel.predict(self.Signals[0,Signal_index].reshape(1,-1,1))))]
+				self.messagPrediction ='The type of event the signal contains is ' + catalog[Pred] +' you can vizualise the signal in the window tab \"Signal vizualization\"' #'The type of event the signal contains is ' # catalog[Pred] #
+				self.slide()				
 		else:
 			CTkMessagebox(title="Error", 
                   message="The PQ model or the Machine Learning model are not inizialized yet",
@@ -664,15 +655,14 @@ class Window3():
 		self.Title.pack(fill = X)
 		self.Check_Val = {}
 		self.Check_S={}
-		#self.master.lift()
 
 		for v in catalog:
 			self.Check_Val[v] = BooleanVar()
 			self.Check_Val[v].set(True)
 			self.Check_S[v] = CTkCheckBox(self.master, variable = self.Check_Val[v], text = v,
 				onvalue = True, offvalue = False)
-			#self.Check_S[v].configure(selectcolor=color1)
-			self.Check_S[v].pack(side= TOP,anchor = W)
+			
+			self.Check_S[v].pack(padx= 20,pady=1,side= TOP,anchor = W)
 
 		self.SignalspE = CTkLabel(self.master, text = 'Signals per event :', font = (font_text, 14))
 		self.SignalspE.place(relx = 0.57, rely = 0.5, relwidth = 0.2, anchor = CENTER)
@@ -680,6 +670,17 @@ class Window3():
 		self.SignalspE = CTkEntry(self.master, font = (font_text, 14))
 		self.SignalspE.place(relx = 0.50, rely = 0.55, relwidth = 0.20, anchor = W) 	
 		self.SignalspE.insert(0, 'Signals per event...')
+
+		self.SignalspE = CTkEntry(self.master, font = (font_text, 14))
+		self.SignalspE.place(relx = 0.50, rely = 0.55, relwidth = 0.20, anchor = W) 	
+		self.SignalspE.insert(0, 'Signals per event...')
+
+		self.Split = CTkLabel(self.master, text = 'Split percentage :', font = (font_text, 14))
+		self.Split.place(relx = 0.57, rely = 0.4, relwidth = 0.2, anchor = CENTER)
+		self.Split_val = DoubleVar()
+		self.Split_entry = CTkEntry(self.master, font = (font_text, 14),textvariable=self.Split_val)
+		self.Split_entry.place(relx = 0.50, rely = 0.45, relwidth = 0.20, anchor = W) 	
+		self.Split_val.set(1.0)
 
 		self.Save = CTkButton(self.master, text = 'SAVE', font = (font_text, 14),command = lambda:self.checkVa(self.Check_Val,False), anchor = CENTER)
 		self.Save.place(relx = 0.50, rely = 0.6, relwidth = 0.20, anchor = W) 	
@@ -697,10 +698,10 @@ class Window3():
 	def checkVa(self,check,withpath):
 		try: 
 			self.numberSignals = int(self.SignalspE.get())
+			splt = int(self.Split_val.get())
 
 		except:
 			messagebox.showerror('Error','The number of signals per event is incorrect')
-			#self.master.lift()
 			return 0
 			
 		if isinstance(self. numberSignals, int) and self.Model != None:
@@ -720,9 +721,7 @@ class Window3():
 			labels = DataFrame( self.Signals*self.numberSignals)
 			Dataset.insert(0,'Label',labels,True)
 
-			#simpledialog.askfloat('Divide the dataset','If you want to divide the dataset input a the percentage of test validation you want (0.0 to 1.0)')
-
-			train, test = train_test_split(Allsig, test_size = 0.30)
+			train, test = train_test_split(Dataset, test_size = splt)
 
 			if withpath:
 				files = [('Numpy Array', '*.npy'), 
@@ -734,10 +733,24 @@ class Window3():
 				file = filedialog.asksaveasfile(filetypes = files, defaultextension = files,initialfile='Test_') 
 				if file.name.endswith('.txt'):
 					np.savetxt(file.name,Dataset)
+				
 				if file.name.endswith('.csv'):
-					Dataset.to_csv(file.name)						
+					Dataset.to_csv(file.name,header=None,index=False)
+					path_test = splitext(file.name)[0]+'_test.csv'
+					path_train = splitext(file.name)[0]+'_train.csv'
+					frame_test = DataFrame(test)
+					frame_train = DataFrame(train)
+					frame_test.to_csv(path_test,header=None,index=False)
+					frame_train.to_csv(path_train,header=None,index=False)
+		
 				if file.name.endswith('.npy'):
+					path_test = splitext(file.name)[0]+'_test.npy'
+					path_train = splitext(file.name)[0]+'_train.npy'
+					np.save(path_test, test)
+					np.save(path_train, train)
 					np.save(file.name,Dataset)
+					np.save(file.name,Dataset)
+
 				if file.name.endswith('.mat'):
 					savemat(file.name, {'Allsig': Dataset})
 				if file.name.endswith('.npz'):
@@ -745,8 +758,11 @@ class Window3():
 			else:
 				file = filedialog.asksaveasfile(mode='w', defaultextension=".npy") 
 				if file:
+					path_test = splitext(file.name)[0]+'_test.npy'
+					path_train = splitext(file.name)[0]+'_train.npy'
+					np.save(path_test, test)
+					np.save(path_train, train)
 					np.save(file.name,Dataset)
-		
 		else:
 			messagebox.showerror('Error','The model is not inizialized yet')
 			self.master.destroy()

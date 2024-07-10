@@ -18,12 +18,11 @@ def FeatExtraction(signal):
 def build_data(data,t,fmin=0,fmax=30):
     Muestras,tSenal,_=data.shape
     db,dbl=[],[]
-    df = 1/(t[-1]-t[0]) 
     for j in range(Muestras):
         for k in range (tSenal):
             y=np.zeros(tSenal)
             y[k]=1
-            db.append(np.abs(st.st(data[j,k], int(fmin/df), int(fmax/df))))
+            db.append(data[j,k])
             dbl.append(y)
     return np.array(db),np.array(dbl)
 

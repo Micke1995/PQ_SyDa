@@ -41,7 +41,10 @@ In this repository there are 2 models that you can load and use.
 
 + The second model is a Support Vector Machine the model was trained and tested with the following signals and got this results:
 
-  >![BarSVM](https://github.com/Micke1995/ROPEC-2024/blob/main/Figures/barplot_SVM.png) 
+  >![BarSVM](https://github.com/Micke1995/ROPEC-2024/blob/main/Figures/barplot_SVM.png)
+  
++ The third model is a convolutional neuronal network was trained and tested with the following signals and got this results:
+  >![BarCNN](https://github.com/Micke1995/ROPEC-2024/blob/main/Figures/barplot_CNN2D.png) 
 
 # Note:
 + All the machine lerning models recive the signal from the funcion `FeatExtraction( )` that is contained in `Tools.py` this function made a feature extraction and return a vector with 6 features :

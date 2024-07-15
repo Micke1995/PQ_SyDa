@@ -14,7 +14,7 @@ from Tools import *
 from os.path import splitext
 
 
-catalog=['Pure sinusoidal', 'Sag', 'Swell','Interruption','Transient',
+catalog=['Pure sinusoidal', 'Sag', 'Swell','Interruption','Spike',
          'Oscillatory transient','Harmonics','Harmonics with Sag', 'Harmonics with Swell',
          'Flicker', 'Flicker with Sag', 'Flicker with Swell', 'Sag with Oscillatory transient',
          'Swell with Oscillatory transient', 'Sag with Harmonics', 'Swell with Harmonics', 'Notch',
@@ -55,8 +55,8 @@ class Window1():
 	def Create_Widgets(self):
 
 		# TITLE AND INFO
-		self.Title = CTkLabel(self.master, text =  'PQ event generator', font = (font_text, 24), height = 30)
-		self.Title.place(relx = 0.5, rely = 0.03, relwidth = 0.4,anchor =CENTER)
+		self.Title = CTkLabel(self.master, text =  'Generating Synthetic Power Quality Events Dataset', font = (font_text, 24), height = 30)
+		self.Title.place(relx = 0.5, rely = 0.03,anchor =CENTER)
 
 		self.Infobtn = CTkLabel(self.master, text = 'i', height = 30, width = 30)
 		self.Infobtn.place(relx = 1.00, rely = 0.0,  anchor = NE)
@@ -93,18 +93,18 @@ class Window1():
 		
         
 		self.DurationLabel = CTkLabel(self.SttgFrame, height = 20, text = 'Disturbance duration (Cycles):', font = (font_text, 14))
-		self.DurationLabel.place(relx = 0.425, y = 15.0)		
+		self.DurationLabel.place(relx = 0.64, y = 15.0)		
 		self.Duration_val = DoubleVar()
 		self.DurationEnt = CTkEntry(self.SttgFrame, font = (font_text, 14),textvariable=self.Duration_val)
-		self.DurationEnt.place(relx = 0.58, y = 10.0, relwidth = 0.03)
+		self.DurationEnt.place(relx = 0.795, y = 10.0, relwidth = 0.03)
 		self.Duration_val.set(5)      
 
 
 		self.StartLabel = CTkLabel(self.SttgFrame, height = 20, text = 'Disturbance starting time (Cycles):', font = (font_text, 14))
-		self.StartLabel.place(relx = 0.62, y = 15.0)		
+		self.StartLabel.place(relx = 0.425, y = 15.0)		
 		self.Start_val = DoubleVar()
 		self.StartEnt = CTkEntry(self.SttgFrame, font = (font_text, 14),textvariable=self.Start_val)
-		self.StartEnt.place(relx = 0.795, y = 10.0, relwidth = 0.03)
+		self.StartEnt.place(relx = 0.6, y = 10.0, relwidth = 0.03)
 		self.Start_val.set(0)   
 		
 		RandomStar =[self.StartEnt,self.DurationEnt]
@@ -116,31 +116,31 @@ class Window1():
 		self.AcivateDeactivate(RandomStar,self.val_RandomStart)                     
 		        
         # ======================================== GENERAL BUTTON'S ======================================== #
-
+		#Mover Der
 		self.RUN = CTkButton(self.SttgFrame, text = 'RUN', font = (font_text, 14), height = 30,command=self.clickRUN)
-		self.RUN.place(relx = 0.775, y = 75, relwidth = 0.085)
-
+		self.RUN.place(relx = 0.735, y = 75, relwidth = 0.2)
+		#Mover Izq
 		self.Init = CTkButton(self.SttgFrame, text = 'INITIALIZE MODEL', font = (font_text, 14),command=self.clickInizializeModel)#Initialize
-		self.Init.place(relx = 0.615, y = 75)
+		self.Init.place(relx = 0.015, y = 75)
 
 		self.PQLb = CTkLabel(self.SttgFrame, text = 'PQ Event:', font = (font_text, 14),  anchor = NE)
-		self.PQLb.place(relx = 0.56, y = 170, anchor = NW)
+		self.PQLb.place(relx = 0.735, y = 130, anchor = NW)
 
 		self.val_PQ = StringVar()
 		self.val_PQ.set(catalog[0])
 		self.PQmenu = CTkOptionMenu(self.SttgFrame, variable = self.val_PQ, values = catalog,font=(font_text,14))
-		self.PQmenu.place(relx = 0.615, y = 168,relwidth=0.32, anchor = NW)	
+		self.PQmenu.place(relx = 0.735, y = 158,relwidth=0.26, anchor = NW)	
 
 
 		self.Refresh = CTkButton(self.SttgFrame, text = 'REFRESH', font = (font_text, 14),command = self.clickrefresh, anchor = CENTER)
-		self.Refresh.place(relx = 0.615, y =208, relwidth = 0.092, anchor = NW)
+		self.Refresh.place(relx = 0.735, y =208, relwidth = 0.092, anchor = NW)
 
 		self.Export = CTkButton(self.SttgFrame, text = 'EXPORT', font = (font_text, 14), anchor = CENTER,command=self.click_EXPORT)
-		self.Export.place(relx = 0.775, y = 208,  relwidth = 0.092, anchor = NW)		
+		self.Export.place(relx = 0.855, y = 208,  relwidth = 0.092, anchor = NW)		
 
 
 		self.tbsettings = CTkTabview(self.SttgFrame)
-		self.tbsettings.place(relx = 0.01, rely = 0.25, relwidth = 0.54, relheight = 0.66, anchor = NW)		
+		self.tbsettings.place(relx = 0.18, rely = 0.25, relwidth = 0.54, relheight = 0.66, anchor = NW)		
 
 		self.tbsettings.add( 'General')
 		self.tbsettings.add( 'Harmonics')
@@ -374,16 +374,16 @@ class Window1():
 				  		self.ent_Ffmax,self.ent_Ffmin,self.ent_Fnmax,self.ent_Fnmin,self.ent_Lamndamax,self.ent_Lamndamin,self.ent_Har1st,
 						self.ent_Har3thmax,self.ent_Har3thmin,self.ent_Har5thmax,self.ent_Har5thmin,self.ent_Har7thmax,self.ent_Har7thmin,self.ent_Kmax,self.ent_Kmin,self.ent_Periodmax,
 						self.ent_Periodmin,self.ent_Phasemax,self.ent_Phasemin,self.ent_Taumax,self.ent_Taumin,self.ent_Rhomax,self.ent_Rhomin]
-				
+		#Mover Izq		
 		self.val_Random =  BooleanVar()
-		self.Check_PQ = CTkCheckBox(self.SttgFrame, variable = self.val_Random, text = 'Default parameters [All]',
+		self.Check_PQ = CTkCheckBox(self.SttgFrame, variable = self.val_Random, text = 'Default parameters',
 			onvalue = True, offvalue = False, command=lambda e=ParametersPQ, v=self.val_Random: self.AcivateDeactivate(e,v),font=(font_text,14))
-		self.Check_PQ.place(relx = 0.755, y = 123, anchor = NE)
+		self.Check_PQ.place(relx = 0.15, y = 125, anchor = NE)
 		self.val_Random.set(True)
 		self.AcivateDeactivate(ParametersPQ,self.val_Random)
-
+		#Mover Izq
 		self.Refreshsttbtn = CTkButton(self.SttgFrame, text = 'CHANGE PARAMETERS', font = (font_text, 14), anchor = CENTER,command=self.ChangeParam)
-		self.Refreshsttbtn.place(relx = 0.775, y = 119, anchor = NW)			
+		self.Refreshsttbtn.place(relx = 0.015, y = 170, anchor = NW)			
 
 
 		# # =============================== SIMULATION ======================================= #
@@ -732,7 +732,11 @@ class Window3():
 						('All Files', '*.*')] 
 				file = filedialog.asksaveasfile(filetypes = files, defaultextension = files,initialfile='Test_') 
 				if file.name.endswith('.txt'):
+					path_test = splitext(file.name)[0]+'_test.csv'
+					path_train = splitext(file.name)[0]+'_train.csv'
 					np.savetxt(file.name,Dataset)
+					np.savetxt(path_test,test)
+					np.savetxt(path_train,train)
 				
 				if file.name.endswith('.csv'):
 					Dataset.to_csv(file.name,header=None,index=False)
@@ -749,12 +753,23 @@ class Window3():
 					np.save(path_test, test)
 					np.save(path_train, train)
 					np.save(file.name,Dataset)
-					np.save(file.name,Dataset)
+	
 
 				if file.name.endswith('.mat'):
+					path_test = splitext(file.name)[0]+'_test.npy'
+					path_train = splitext(file.name)[0]+'_train.npy'
 					savemat(file.name, {'Allsig': Dataset})
-				if file.name.endswith('.npz'):
+					savemat(path_test, {'test':test})
+					savemat(path_train, {'train':train})					
+
+
+				if file.name.endswith('.npz'):						
+					path_test = splitext(file.name)[0]+'_test.npy'
+					path_train = splitext(file.name)[0]+'_train.npy'
+					np.savez(path_test, test)
+					np.savez(path_train, train)
 					np.savez(file.name,Dataset)	
+									
 			else:
 				file = filedialog.asksaveasfile(mode='w', defaultextension=".npy") 
 				if file:

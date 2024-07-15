@@ -391,7 +391,7 @@ class Window1():
 		# NOTEBOOK FOR GRAPHICS
 		self.Notebook = CTkTabview(self.master)
 		self.Notebook.place(x = 14, y = 290, relheight = 0.63, relwidth = 0.980, anchor = NW)
-		self.Notebook.add( 'Signal vizualitation')
+		self.Notebook.add( 'Signal visualization')
 		self.Notebook.add( 'FFT')
 		self.Notebook.add( 'Machine Learning')
 
@@ -415,17 +415,17 @@ class Window1():
 			Signal_index = catalog.index(self.val_PQ.get())
 			if self.MLpath.endswith('.pkl'):
 				Pred = int(self.MLmodel.predict(FeatExtraction(self.Signals[0,Signal_index]).reshape(1,6)))
-				self.messagPrediction ='The type of event the signal contains is ' + catalog[Pred] +' you can visualize the signal in the window tab \"Signal vizualization\"' #'The type of event the signal contains is ' # catalog[Pred] #
+				self.messagPrediction ='The type of event the signal contains is ' + catalog[Pred] +' you can visualize the signal in the window tab \"Signal visualization\"' #'The type of event the signal contains is ' # catalog[Pred] #
 				self.slide()
 
 			if self.MLpath.endswith('.h5'):
 				Signal_List = [1,2,3,4,5,6,9,16] 
 				Pred = Signal_List[int(np.argmax(self.MLmodel.predict(self.Signals[0,Signal_index].reshape(1,-1,1))))]
-				self.messagPrediction ='The type of event the signal contains is ' + catalog[Pred] +' you can visualize the signal in the window tab \"Signal vizualization\"' #'The type of event the signal contains is ' # catalog[Pred] #
+				self.messagPrediction ='The type of event the signal contains is ' + catalog[Pred] +' you can visualize the signal in the window tab \"Signal visualization\"' #'The type of event the signal contains is ' # catalog[Pred] #
 				self.slide()				
 		else:
 			CTkMessagebox(title="Error", 
-                  message="The PQ model or the Machine Learning model are not inizialized yet",
+                  message="The PQ model or the Machine Learning model are not initialized yet",
 				  icon='cancel')
 			
 	def slide(self):
@@ -470,10 +470,10 @@ class Window1():
 		ax.set_ylabel('Magnitude')
 		ax.set_facecolor('k')
 		self.fig.subplots_adjust(left = 0.1, bottom = 0.23, right = 0.96, top = 0.9)
-		self.canvas_sig = FigureCanvasTkAgg(self.fig,self.Notebook.tab('Signal vizualitation')) 
+		self.canvas_sig = FigureCanvasTkAgg(self.fig,self.Notebook.tab('Signal visualization')) 
 		self.canvas_sig.draw() 
 		self.canvas_sig.get_tk_widget().place(relheight = 1.00, relwidth = 1.00)
-		self.toolbar_sig = NavigationToolbar2Tk(self.canvas_sig,self.Notebook.tab('Signal vizualitation')) 
+		self.toolbar_sig = NavigationToolbar2Tk(self.canvas_sig,self.Notebook.tab('Signal visualization')) 
 		self.toolbar_sig.place(relx = 0.50, rely = 1.00, relwidth = 1.00, anchor = S)
 		self.toolbar_sig.update()
 		Signal_index = catalog.index(self.val_PQ.get())
@@ -562,8 +562,9 @@ June 11th, 2024
 			self.Fig_Signals()
 			self.Fig_FFT()			
 		else:
-			messagebox.showerror('Error','The model is not inizialized yet')
-			# self.master.lift()
+			CTkMessagebox(title="Error", 
+                  message="The PQ model is not initialized yet",
+				  icon='cancel')
 
 
 	def AcivateDeactivate(self,Entradas,Variable):

@@ -55,8 +55,8 @@ class Window1():
 	def Create_Widgets(self):
 
 		# TITLE AND INFO
-		self.Title = CTkLabel(self.master, text =  'Generating Synthetic Power Quality Events Dataset', font = (font_text, 24), height = 30)
-		self.Title.place(relx = 0.5, rely = 0.03,anchor =CENTER)
+		self.Title = CTkLabel(self.master, text =  'Synthetic Power Quality Events Dataset Generator', font = (font_text, 24), height = 30)
+		self.Title.place(relx = 0.5, rely = 0.025,anchor =CENTER)
 
 		self.Infobtn = CTkLabel(self.master, text = 'i', height = 30, width = 30)
 		self.Infobtn.place(relx = 1.00, rely = 0.0,  anchor = NE)
@@ -415,13 +415,13 @@ class Window1():
 			Signal_index = catalog.index(self.val_PQ.get())
 			if self.MLpath.endswith('.pkl'):
 				Pred = int(self.MLmodel.predict(FeatExtraction(self.Signals[0,Signal_index]).reshape(1,6)))
-				self.messagPrediction ='The type of event the signal contains is ' + catalog[Pred] +' you can vizualise the signal in the window tab \"Signal vizualization\"' #'The type of event the signal contains is ' # catalog[Pred] #
+				self.messagPrediction ='The type of event the signal contains is ' + catalog[Pred] +' you can visualize the signal in the window tab \"Signal vizualization\"' #'The type of event the signal contains is ' # catalog[Pred] #
 				self.slide()
 
 			if self.MLpath.endswith('.h5'):
 				Signal_List = [1,2,3,4,5,6,9,16] 
 				Pred = Signal_List[int(np.argmax(self.MLmodel.predict(self.Signals[0,Signal_index].reshape(1,-1,1))))]
-				self.messagPrediction ='The type of event the signal contains is ' + catalog[Pred] +' you can vizualise the signal in the window tab \"Signal vizualization\"' #'The type of event the signal contains is ' # catalog[Pred] #
+				self.messagPrediction ='The type of event the signal contains is ' + catalog[Pred] +' you can visualize the signal in the window tab \"Signal vizualization\"' #'The type of event the signal contains is ' # catalog[Pred] #
 				self.slide()				
 		else:
 			CTkMessagebox(title="Error", 

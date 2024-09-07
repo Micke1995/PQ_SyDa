@@ -3,20 +3,20 @@ channels:
   - defaults
   - conda-forge
 dependencies:
-  - python=3.9.18
-  - pip = 23.3.1
-  - joblib = 1.4.2
-  - keras = 2.10.0
-  - pillow = 10.4.0
-  - scipy = 1.13.1
+  - python
+  - pip 
+  - joblib 
+  - keras 
+  - pillow 
+  - scipy 
   - pandas
   - pip:
-    - tensorflow == 2.10.1
+    - tensorflow 
     - tk
     - customtkinter
-    - scikit-learn == 1.5.0
-    - matplotlib == 3.9.0
-    - numpy == 1.26.1
+    - scikit-learn 
+    - matplotlib 
+    - numpy 
     - CTkMessagebox
     - stockwell
 
